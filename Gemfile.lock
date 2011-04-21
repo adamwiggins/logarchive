@@ -1,10 +1,23 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    activesupport (3.0.7)
+    addressable (2.2.5)
+    em-http-request (0.3.0)
+      addressable (>= 2.0.0)
+      escape_utils
+      eventmachine (>= 0.12.9)
+    escape_utils (0.2.3)
     eventmachine (0.12.10)
+    happening (0.1.0)
+      activesupport
+      em-http-request
+    i18n (0.5.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   eventmachine
+  happening
+  i18n
