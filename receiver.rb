@@ -28,7 +28,7 @@ module LogReceiver
     bucket = ENV['S3_BUCKET']
 
     t = Time.now
-    truncated_min = (t.min / 10).to_i * 10
+    truncated_min = sprintf("%02d", (t.min / 10).to_i * 10)
     timerange = "#{t.year}-#{t.month}-#{t.day}-#{t.hour}:#{truncated_min}:00"
     file = "log-#{timerange}.txt"
 
