@@ -26,7 +26,11 @@ module LogReceiver
     on_error = Proc.new { |http| puts "An error occured: #{http.response_header.status}" }
 
     bucket = ENV['S3_BUCKET']
-    file = "log-#{Time.now.strftime("%Y-%m-%d-%H:%M:%S")}.txt"
+
+    t = Time.now
+    truncated_min = (t.min / 10).to_i * 10
+    timerange = "#{t.year}-#{t.month}-#{t.day}-#{t.hour}:#{truncated_min}:00"
+    file = "log-#{timerange}.txt"
 
     item = Happening::S3::Item.new(bucket, file, :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'], :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'], :permissions => 'public-read')
 
