@@ -14,6 +14,11 @@ module LogReceiver
   end
 
   def self.archive
+    if $queue == ""
+      puts "Queue is empty, skipping archival"
+      return
+    end
+
     puts "Archiving queue:\n#{$queue}"
     to_upload = $queue
     $queue = ""
@@ -21,9 +26,9 @@ module LogReceiver
     on_error = Proc.new { |http| puts "An error occured: #{http.response_header.status}" }
 
     bucket = ENV['S3_BUCKET']
-    file = 'test.txt'
+    file = "log-#{Time.now.strftime("%Y-%m-%d-%H:%M:%S")}.txt"
 
-    item = Happening::S3::Item.new(bucket, file, :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'], :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'])
+    item = Happening::S3::Item.new(bucket, file, :aws_access_key_id => ENV['AWS_ACCESS_KEY_ID'], :aws_secret_access_key => ENV['AWS_SECRET_ACCESS_KEY'], :permissions => 'public-read')
 
     item.put(to_upload, :on_error => on_error) do |response|
       puts "Upload finished: http://s3.amazonaws.com/#{bucket}/#{file}"
@@ -34,7 +39,7 @@ end
 EM.run do
   EM.open_datagram_socket('0.0.0.0', port, LogReceiver)
 
-  EM.add_periodic_timer(5) do
+  EM.add_periodic_timer((ENV['ARCHIVE_INTERVAL'] || 10*60).to_i) do
     LogReceiver.archive
   end
 end
