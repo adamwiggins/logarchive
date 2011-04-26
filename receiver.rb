@@ -10,7 +10,8 @@ $queue = ""
 module LogReceiver
   def receive_data(data)
     puts "Got #{data.size} bytes: #{data}"
-    $queue += data + "\n"
+    data = data.sub(/^<\d+>\d* /, '')     # crudely strip syslog header
+    $queue += data
   end
 
   def self.archive
