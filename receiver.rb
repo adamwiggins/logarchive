@@ -2,6 +2,8 @@ require 'eventmachine'
 require 'i18n'
 require 'happening'
 
+STDOUT.sync = STDERR.sync = true
+
 port = (ENV['PORT'] || 8000).to_i
 puts "Starting on port #{port}"
 
