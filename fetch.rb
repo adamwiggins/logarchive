@@ -50,10 +50,11 @@ while cursor < to
   cursor = t + 10*60
 end
 
+puts "]"
+
 if $files.empty?
   puts "No logs found for that period"
 else
-  puts "]"
   system "cat #{$files.join(' ')} > log.txt"
   $files.each { |f| FileUtils.rm(f) }
   puts "done, result is in log.txt"
